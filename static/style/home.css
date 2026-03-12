@@ -1,0 +1,254 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --main-color: #d31f1f;
+}
+
+body {
+    background-image: url('../img/FondoComida.jpeg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+header {
+    background: #fff;
+    box-shadow: 0 0 10px 1px #0002;
+    /*background-color: #0009;*/
+    /*background: linear-gradient(to bottom, #000, transparent);*/
+    width: 100%;
+}
+
+.nav_bar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+}
+
+.nav_list {
+    display: flex;
+    list-style: none;
+    gap: 10px;
+}
+
+.nav_links {
+    text-decoration: none;
+    color: #d31f1f;
+    outline: 1px solid #d31f1f;
+    font-size: 1.3em;
+    padding: 5px;
+    display: inline-block;
+}
+@keyframes mov {
+    from{
+        transform: scale();
+    }
+    to{
+        transform: scale(100);
+    }
+}
+a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#menu_link{
+    border-radius: 5px;
+}
+.dropdown_li {
+    position: absolute;
+    display: none;
+}
+
+.svg {
+    border-radius: 10000px;
+    padding-bottom: 0px;
+    background: #d31f1f;
+}
+
+.dropdown_links {
+    display: block;
+    padding: 20px;
+    text-decoration: none;
+    color: #d31f1f;
+}
+
+.dropdown {
+    position: absolute;
+    background: #fff;
+    display: none;
+}
+
+.dropdown_li:focus-within .dropdown {
+    display: block;
+}
+
+.dropdown_links:hover {
+    background: #fff3;
+}
+
+.actual {
+    text-decoration: none;
+    color: #fff;
+    background: #d31f1f;
+    font-size: 1.3em;
+    padding: 5px;
+    display: inline-block;
+    pointer-events: none;
+}
+
+.nav_links:hover {
+    background: #fff3;
+}
+
+/*Texto_centra*/
+
+.Texto_centra{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    text-align: center;
+    height: 100vh;
+    width: auto;
+}
+.Texto_centra > h1{
+    font-family: "Dancing Script", cursive;
+    font-size: 4em;
+    transform: rotate(-4deg);
+}
+.Texto_centra > p {
+    font-size: 1.5em;
+}
+.Texto_centra > a {
+    background-color: var(--main-color);
+    text-decoration: none;
+    color: #fff;
+    padding: 10px;
+    width: 100px;
+    margin-top: 5vh;
+}
+
+/*Quienes_somos*/
+
+.Quienes_somos{
+    display: flex;
+    background-color: #fff;
+    text-align: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+    height: 400px;
+}
+
+/*cuerpo de pagina*/
+
+main {
+    background-color: #0006;
+    width: 100%;
+}
+
+.menu {
+    padding: 2%;
+    background: #ffffff;
+}
+
+.menu_h2 {
+    background: var(--main-color);
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    width: fit-content;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.h2_contain {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.menu_container {
+    width: 100%;    
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.card {
+    flex: 1 1 200px;
+    overflow: hidden;
+    background-size: cover;
+}
+
+.info {
+    background: linear-gradient(to top, #000, transparent);
+    padding: 20px;
+    color: #fff;
+    margin-top: 350px;
+}
+
+/*Opiniones*/
+.opinion-title{
+    color: white;
+    width: 100%;
+    background-color: var(--main-color);
+    padding: 14px;
+    box-shadow: 0 0 10px 1px #0002; 
+    
+}
+
+.opinion-div_title{
+    margin-top: 10px;
+    width: 100%; 
+    background-color: white
+}  
+
+.coment{
+    background-color: #f3f3f3;
+    padding: 20px;
+}
+
+/*Footer*/
+footer {
+    background-color: #0006;
+    text-align: center;
+    color: #fff;
+    padding: 10%;
+}
+
+/*riponsi*/
+@media (max-width: 705px) {
+    .nav_list {
+        display: none;
+    }
+
+    .dropdown_li {
+        display: block;
+        position: absolute;
+    }
+
+    header {
+        background: #0006;
+    }
+
+    .nav_bar {
+        justify-content: start;
+    }
+
+}
+
+
+html {
+    scroll-behavior: smooth;
+}
+.h2_contain {
+    scroll-margin-top: 20px; 
+}

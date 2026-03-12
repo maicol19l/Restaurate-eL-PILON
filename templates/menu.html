@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Menú | El Pilón</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style/menu.css') }}">
+</head>
+<body>
+
+<header class="top">
+    <h2><a href="">Restaurante El Pilón</a></h2>
+    <button class="cart-btn" onclick="toggleCart()">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M223.5-103.5Q200-127 200-160t23.5-56.5Q247-240 280-240t56.5 23.5Q360-193 360-160t-23.5 56.5Q313-80 280-80t-56.5-23.5Zm400 0Q600-127 600-160t23.5-56.5Q647-240 680-240t56.5 23.5Q760-193 760-160t-23.5 56.5Q713-80 680-80t-56.5-23.5ZM246-720l96 200h280l110-200H246Zm-38-80h590q23 0 35 20.5t1 41.5L692-482q-11 20-29.5 31T622-440H324l-44 80h480v80H280q-45 0-68-39.5t-2-78.5l54-98-144-304H40v-80h130l38 80Zm134 280h280-280Z"/></svg> Carrito     (<span id="cartCount">0</span>)
+    </button>
+</header>
+
+<p class="menu-nav_toggle">></p>
+
+<nav class="menu-nav">
+    <ul>
+        <li class="nav-btn active" onclick="filtrarMenu('platos', this)"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M160-120q-33 0-56.5-23.5T80-200v-120h800v120q0 33-23.5 56.5T800-120H160Zm0-120v40h640v-40H160Zm263-160q-21 20-77 20t-76-20q-20-20-56-20t-57 20q-21 20-77 20v-80q36 0 57-20t77-20q56 0 76 20t56 20q36 0 57-20t77-20q56 0 77 20t57 20q36 0 56-20t76-20q56 0 79 20t55 20v80q-56 0-75-20t-55-20q-36 0-58 20t-78 20q-56 0-77-20t-57-20q-36 0-57 20ZM80-560v-40q0-115 108.5-177.5T480-840q183 0 291.5 62.5T880-600v40H80Zm400-200q-124 0-207.5 31T166-640h628q-23-58-106.5-89T480-760Zm0 520Zm0-400Z"/></svg></li>
+        <li class="nav-btn" onclick="filtrarMenu('bebidas', this)"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M240-120v-80h200v-200L120-760v-80h720v80L520-400v200h200v80H240Zm58-560h364l72-80H226l72 80Zm182 204 111-124H369l111 124Zm0 0Z"/></svg> </li>
+        <li class="nav-btn" onclick="filtrarMenu('postres', this)"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M482-40 294-400q-71 3-122.5-41T120-560q0-51 29.5-92t74.5-58q18-91 89.5-150.5T480-920q95 0 166.5 59.5T736-710q45 17 74.5 58t29.5 92q0 75-53 119t-119 41L482-40ZM280-480q15 0 29.5-5t26.5-17l22-22 26 16q21 14 45.5 21t50.5 7q26 0 50.5-7t45.5-21l26-16 22 22q12 12 26.5 17t29.5 5q33 0 56.5-23.5T760-560q0-30-19-52.5T692-640l-30-4-2-32q-5-69-57-116.5T480-840q-71 0-123 47.5T300-676l-2 32-30 6q-30 6-49 27t-19 51q0 33 23.5 56.5T280-480Zm202 266 108-210q-24 12-52 18t-58 6q-27 0-54.5-6T372-424l110 210Zm-2-446Z"/></svg></li>
+    </ul>
+</nav>
+
+<main>
+
+<!-- PLATOS -->
+<section id="platos" class="categoria">
+<h2 class="titulo">Platos</h2>
+
+<section class="menu">
+{% for p in productos if p.nombre not in [
+'Morir Soñando','Jugo de Chinola','Jugo de Tamarindo','Pera Piña','Jugo de Limón','Sangría','Chacá','Arroz con Leche'
+] %}
+<div class="card">
+<h3>{{ p.nombre }}</h3>
+<div class="food-img" style="background-image:url('{{ p.imagen }}')"></div>
+
+<p>RD$ {{ p.precio }}</p>
+<p>Disponibles: {{ p.stock }}</p>
+
+{% if p.stock > 0 %}
+<button onclick="addToCart('{{ p.nombre }}', {{ p.precio }}, '{{ p.imagen }}', {{ p.stock }})">
+Agregar
+</button>
+{% else %}
+<button disabled style="background:#999;cursor:not-allowed;">
+Agotado
+</button>
+{% endif %}
+
+</div>
+{% endfor %}
+</section>
+</section>
+
+
+<!-- BEBIDAS -->
+<section id="bebidas" class="categoria">
+
+<h2 class="titulo">Bebidas</h2>
+
+<section class="menu">
+{% for p in productos if p.nombre in [
+'Morir Soñando','Jugo de Chinola','Jugo de Tamarindo','Pera Piña','Jugo de Limón','Sangría'
+] %}
+<div class="card">
+
+<h3>{{ p.nombre }}</h3>
+
+<div class="food-img" style="background-image:url('{{ p.imagen }}')"></div>
+
+<p>RD$ {{ p.precio }}</p>
+<p>Disponibles: {{ p.stock }}</p>
+
+{% if p.stock > 0 %}
+<button onclick="addToCart('{{ p.nombre }}', {{ p.precio }}, '{{ p.imagen }}', {{ p.stock }})">
+Agregar
+</button>
+{% else %}
+<button disabled style="background:#999;cursor:not-allowed;">
+Agotado
+</button>
+{% endif %}
+
+</div>
+{% endfor %}
+</section>
+</section>
+
+
+<!-- POSTRES -->
+<section id="postres" class="categoria">
+
+<h2 class="titulo">Postres</h2>
+
+<section class="menu">
+{% for p in productos if p.nombre in ['Chacá','Arroz con Leche'] %}
+<div class="card">
+
+<h3>{{ p.nombre }}</h3>
+
+<div class="food-img" style="background-image:url('{{ p.imagen }}')"></div>
+
+<p>RD$ {{ p.precio }}</p>
+<p>Disponibles: {{ p.stock }}</p>
+
+{% if p.stock > 0 %}
+<button onclick="addToCart('{{ p.nombre }}', {{ p.precio }}, '{{ p.imagen }}', {{ p.stock }})">
+Agregar
+</button>
+{% else %}
+<button disabled style="background:#999;cursor:not-allowed;">
+Agotado
+</button>
+{% endif %}
+
+</div>
+{% endfor %}
+</section>
+</section>
+
+</main>
+
+
+<!-- CARRITO -->
+<aside class="cart" id="cart">
+
+<h3>🛒 Tu pedido</h3>
+
+<div id="cartItems"></div>
+
+<input id="nombre" placeholder="Tu nombre">
+<input id="mesa" placeholder="Número de mesa">
+<input id="email" placeholder="Email" type="email">
+
+<p><strong>Total: RD$ <span id="total">0</span></strong></p>
+
+<button onclick="toggleCart()">Seguir pidiendo</button>
+<button class="pedir" onclick="enviarPedido()">Pedir</button>
+
+</aside>
+
+
+<!-- MODAL -->
+<div id="modal" class="modal">
+
+<div class="modal-box">
+
+<img id="modalIcon">
+
+<h3 id="modalTitle"></h3>
+
+<p id="modalMsg"></p>
+
+<button onclick="cerrarModal()">Aceptar</button>
+
+</div>
+</div>
+
+
+<script src="{{ url_for('static', filename='scripts/menu.js') }}"></script>
+
+</body>
+</html>

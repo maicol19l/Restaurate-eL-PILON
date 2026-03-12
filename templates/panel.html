@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketing Dashboard · El Pilón</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+        :root {
+            /* Paleta Moderna */
+            --bg-body: #f4f7fe;          
+            --bg-surface: #ffffff;       
+            
+            --brand-primary: #c2410c;    /* Terracota Dominicano */
+            --brand-secondary: #2b3674;  /* Azul Profundo Matemático */
+            --brand-success: #05cd99;    
+            --brand-warning: #ffce20;    
+            
+            --text-main: #2b3674;
+            --text-muted: #a3aed1;
+            
+            --border-color: #e2e8f0;
+            --radius-lg: 20px;
+            --radius-md: 14px;
+            
+            --shadow-soft: 0px 18px 40px rgba(112, 144, 176, 0.12);
+            --shadow-hover: 0px 20px 45px rgba(112, 144, 176, 0.2);
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Sidebar UI */
+        .sidebar {
+            background: var(--bg-surface);
+            border-right: 1px solid var(--border-color);
+            min-height: 100vh;
+        }
+        
+        .brand-title {
+            color: var(--brand-secondary);
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-link {
+            color: var(--text-muted);
+            font-weight: 600;
+            padding: 0.8rem 1.2rem;
+            border-radius: var(--radius-md);
+            margin-bottom: 0.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(194, 65, 12, 0.08);
+            color: var(--brand-primary);
+            transform: translateX(5px);
+        }
+
+        /* Cards y KPIs */
+        .card {
+            background: var(--bg-surface);
+            border: none;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-soft);
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
+        }
+
+        .stat-card {
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .kpi-num {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--brand-secondary);
+            margin: 0.5rem 0;
+            letter-spacing: -1px;
+        }
+
+        /* Iconos de KPI */
+        .icon-box {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        /* Formulario Simulador */
+        .simulador-form .form-label {
+            font-weight: 600;
+            color: var(--text-main);
+        }
+        
+        .simulador-form .form-control {
+            background-color: var(--bg-body);
+            border: 1px solid transparent;
+            border-radius: 10px;
+            font-weight: 500;
+            color: var(--brand-secondary);
+            transition: all 0.2s;
+        }
+
+        .simulador-form .form-control:focus {
+            background-color: #fff;
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 4px rgba(194, 65, 12, 0.1);
+        }
+
+        /* Gráficos Contenedor */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+        /* Utilidades */
+        .btn-brand {
+            background-color: var(--brand-primary);
+            color: white;
+            font-weight: 600;
+            border-radius: 10px;
+        }
+        .btn-brand:hover {
+            background-color: #a3360a;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-2 d-none d-md-block sidebar p-4">
+            <h4 class="brand-title mb-5">
+                <i class="fa-solid fa-utensils me-2 text-primary" style="color: var(--brand-primary)!important;"></i>EL PILÓN
+            </h4>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#"><i class="fa-solid fa-chart-line me-3"></i>Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fa-solid fa-house me-3"></i>Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin"><i class="fa-solid fa-clipboard-list me-3"></i>Pedidos</a>
+                </li>
+            </ul>
+        </nav>
+
+        <main class="col-md-10 p-4 p-lg-5">
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-5">
+                <div>
+                    <h2 class="fw-bold mb-1" style="color: var(--brand-secondary);">Análisis de Rendimiento</h2>
+                    <p class="text-muted fw-medium">
+                        <i class="fa-solid fa-location-dot me-1"></i> Av. España frente al Acuario Nacional
+                    </p>
+                </div>
+                <div class="d-flex gap-3">
+                    <button class="btn btn-light rounded-pill px-4 fw-bold shadow-sm" onclick="window.print()">
+                        <i class="fa-solid fa-print me-2"></i> Reporte
+                    </button>
+                    <span class="btn btn-brand rounded-pill px-4 shadow-sm">
+                        <i class="fa-regular fa-calendar-days me-2"></i> {{ dias_mes }} Días
+                    </span>
+                </div>
+            </div>
+
+            <div class="row g-4 mb-5">
+                <div class="col-md-3">
+                    <div class="card stat-card h-100">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="kpi-title">Ingreso Mensual</div>
+                                <div class="kpi-num">RD$ {{ "{:,.0f}".format(ingreso_mensual) }}</div>
+                                <span class="badge bg-success-subtle text-success fw-bold rounded-pill">
+                                    <i class="fa-solid fa-arrow-trend-up"></i> +12.5%
+                                </span>
+                            </div>
+                            <div class="icon-box" style="background: rgba(194, 65, 12, 0.1); color: var(--brand-primary);">
+                                <i class="fa-solid fa-wallet"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card stat-card h-100">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="kpi-title">Ganancia Neta</div>
+                                <div class="kpi-num">RD$ {{ "{:,.0f}".format(ganancia_mensual) }}</div>
+                                <span class="badge bg-info-subtle text-info fw-bold rounded-pill">Margen: {{ margen_pct_total }}%</span>
+                            </div>
+                            <div class="icon-box" style="background: rgba(5, 205, 153, 0.1); color: var(--brand-success);">
+                                <i class="fa-solid fa-chart-pie"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card stat-card h-100">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="kpi-title">Clientes Prom. (Día)</div>
+                                <div class="kpi-num">{{ clientes_dia }}</div>
+                                <span class="text-muted small fw-semibold">Ticket: RD$ {{ gasto_prom }}</span>
+                            </div>
+                            <div class="icon-box" style="background: rgba(255, 206, 32, 0.2); color: #d97706;">
+                                <i class="fa-solid fa-users"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card stat-card h-100">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="kpi-title">Costos Operativos</div>
+                                <div class="kpi-num">RD$ {{ "{:,.0f}".format(costos_mensuales) }}</div>
+                                <span class="text-muted small fw-semibold">Base Fija</span>
+                            </div>
+                            <div class="icon-box" style="background: rgba(43, 54, 116, 0.1); color: var(--brand-secondary);">
+                                <i class="fa-solid fa-file-invoice-dollar"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4 mb-5">
+                <div class="col-lg-12">
+                    <div class="card p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div>
+                                <h5 class="mb-1 fw-bold" style="color: var(--brand-secondary);">Proyección Matemática de Crecimiento</h5>
+                                <p class="text-muted small mb-0">Modelo de función exponencial: <code class="bg-light px-2 py-1 rounded">V(t) = V₀·e^(kt)</code></p>
+                            </div>
+                            <i class="fa-solid fa-calculator text-muted fs-4"></i>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="funcionVentasChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-8">
+                    <div class="card p-4 h-100">
+                        <h5 class="mb-4 fw-bold" style="color: var(--brand-secondary);">Distribución de Frecuencia (Top 10)</h5>
+                        <div class="chart-container">
+                            <canvas id="ventasChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card p-4 h-100">
+                        <h5 class="mb-4 fw-bold" style="color: var(--brand-secondary);">Espectro Demográfico</h5>
+                        <div class="chart-container" style="height: 250px;">
+                            <canvas id="demografiaChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-12">
+                    <div class="card p-4 p-lg-5">
+                        <div class="row align-items-center">
+                            <div class="col-lg-5 mb-4 mb-lg-0 border-end pe-lg-5">
+                                <h5 class="mb-3 fw-bold" style="color: var(--brand-secondary);">
+                                    <i class="fa-solid fa-sliders me-2" style="color: var(--brand-primary);"></i> Simulador de Variables
+                                </h5>
+                                <p class="text-muted small mb-4">Modifica los parámetros escalares para recalcular la proyección de ingresos y rentabilidad en tiempo real.</p>
+                                
+                                <form id="simuladorForm" class="row g-3 simulador-form" method="GET" action="/panel">
+                                    <div class="col-6">
+                                        <label class="form-label small">Tasa de Clientes ($x_1$)</label>
+                                        <input type="number" name="clientes_dia" id="clientes_dia" class="form-control" value="{{ clientes_dia }}">
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label small">Ticket Promedio ($x_2$)</label>
+                                        <input type="number" name="gasto_prom" id="gasto_prom" class="form-control" value="{{ gasto_prom }}">
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label small">Horizonte Temporal ($t$)</label>
+                                        <input type="number" name="dias_mes" id="dias_mes" class="form-control" value="{{ dias_mes }}">
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label small">Costos ($C$)</label>
+                                        <input type="number" name="costos_mensuales" id="costos_mensuales" class="form-control" value="{{ costos_mensuales }}">
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="col-lg-7 ps-lg-5">
+                                <h6 class="text-muted text-uppercase fw-bold mb-4 small tracking-wide">Resultados de la Función</h6>
+                                <div class="row g-3" id="simuladorResultados">
+                                    <div class="col-sm-4">
+                                        <div class="p-3 rounded-4" style="background: rgba(43, 54, 116, 0.04); border: 1px dashed var(--border-color);">
+                                            <span class="text-muted d-block small fw-semibold mb-1">Vector de Ingreso (I)</span>
+                                            <span class="fs-4 fw-bold text-primary" id="ingresoVivo">RD$ 0</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="p-3 rounded-4" style="background: rgba(5, 205, 153, 0.04); border: 1px dashed rgba(5, 205, 153, 0.3);">
+                                            <span class="text-muted d-block small fw-semibold mb-1">Utilidad (U = I - C)</span>
+                                            <span class="fs-4 fw-bold text-success" id="gananciaVivo">RD$ 0</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="p-3 rounded-4" style="background: rgba(194, 65, 12, 0.04); border: 1px dashed rgba(194, 65, 12, 0.3);">
+                                            <span class="text-muted d-block small fw-semibold mb-1">Coef. Rentabilidad</span>
+                                            <span class="fs-4 fw-bold" style="color: var(--brand-primary);" id="margenVivo">0%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script>
+    // Configuraciones globales matemáticas de Chart.js
+    Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
+    Chart.defaults.color = "#a3aed1";
+    Chart.defaults.scale.grid.color = "rgba(226, 232, 240, 0.6)";
+
+    // 1. Gráfico de Función Exponencial (Ventas Continuas)
+    const ctxFuncion = document.getElementById('funcionVentasChart').getContext('2d');
+    
+    // Generar datos para f(t) = V0 * e^(k*t)
+    const dias = Array.from({length: 30}, (_, i) => i + 1); // Eje X (Tiempo)
+    const v0 = parseFloat('{{ ingreso_mensual }}') / 30 || 5000; // Ingreso base diario aproximado
+    const k = 0.03; // Constante de crecimiento (simulada al 3%)
+    
+    const datosExponenciales = dias.map(t => v0 * Math.exp(k * t));
+
+    // Crear gradiente para la curva
+    let gradientFill = ctxFuncion.createLinearGradient(0, 0, 0, 300);
+    gradientFill.addColorStop(0, 'rgba(194, 65, 12, 0.4)');
+    gradientFill.addColorStop(1, 'rgba(194, 65, 12, 0.0)');
+
+    new Chart(ctxFuncion, {
+        type: 'line',
+        data: {
+            labels: dias,
+            datasets: [{
+                label: 'V(t) - Proyección de Ventas',
+                data: datosExponenciales,
+                borderColor: '#c2410c', // Terracota
+                backgroundColor: gradientFill,
+                borderWidth: 3,
+                pointRadius: 0,
+                pointHoverRadius: 6,
+                fill: true,
+                tension: 0.4 // Hace la curva suave y continua
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#2b3674',
+                    titleFont: { size: 13 },
+                    bodyFont: { size: 14, weight: 'bold' },
+                    callbacks: {
+                        label: function(context) {
+                            return ' RD$ ' + context.parsed.y.toFixed(2);
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    title: { display: true, text: 'Tiempo t (Días)', font: { weight: 'bold' } },
+                    grid: { display: false }
+                },
+                y: {
+                    title: { display: true, text: 'Ventas V(t)', font: { weight: 'bold' } },
+                    beginAtZero: true,
+                    border: { dash: [4, 4] }
+                }
+            }
+        }
+    });
+
+    // 2. Gráfico de Barras (Distribución de Frecuencia)
+    const ctxVentas = document.getElementById('ventasChart').getContext('2d');
+    new Chart(ctxVentas, {
+        type: 'bar',
+        data: {
+            labels: [{% for v in ventas %}"{{ v.nombre }}",{% endfor %}],
+            datasets: [{
+                label: 'Frecuencia Unitaria',
+                data: [{% for v in ventas %}{{ v.cantidad }},{% endfor %}],
+                backgroundColor: '#2b3674',
+                borderRadius: 6,
+                barPercentage: 0.5,
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { 
+                    beginAtZero: true,
+                    border: { dash: [4, 4] }
+                },
+                x: { grid: { display: false } }
+            }
+        }
+    });
+
+    // 3. Gráfico Demográfico (Estilo Área Polar - mejor visualización geométrica)
+    const ctxDemo = document.getElementById('demografiaChart').getContext('2d');
+    new Chart(ctxDemo, {
+        type: 'polarArea',
+        data: {
+            labels: [{% for item in segmentacion.demografica %}"{{ item.edad }}",{% endfor %}],
+            datasets: [{
+                data: [{% for item in segmentacion.demografica %}{{ item.porcentaje.replace('%','') }},{% endfor %}],
+                backgroundColor: [
+                    'rgba(194, 65, 12, 0.7)',
+                    'rgba(43, 54, 116, 0.7)',
+                    'rgba(5, 205, 153, 0.7)',
+                    'rgba(255, 206, 32, 0.7)'
+                ],
+                borderColor: '#ffffff',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'right', labels: { usePointStyle: true, boxWidth: 8 } }
+            },
+            scales: { r: { ticks: { display: false } } }
+        }
+    });
+
+    // ---------- SIMULADOR MATEMÁTICO EN VIVO ----------
+    function actualizarSimulador() {
+        const clientes = parseFloat(document.getElementById('clientes_dia').value) || 0;
+        const gasto = parseFloat(document.getElementById('gasto_prom').value) || 0;
+        const dias = parseFloat(document.getElementById('dias_mes').value) || 1;
+        const costos = parseFloat(document.getElementById('costos_mensuales').value) || 0;
+
+        // Cálculos
+        const ingreso = clientes * gasto * dias;
+        const ganancia = ingreso - costos;
+        const margen = ingreso > 0 ? (ganancia / ingreso) * 100 : 0;
+
+        // Renderizado en DOM con separadores de miles
+        document.getElementById('ingresoVivo').innerText = 'RD$ ' + ingreso.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        document.getElementById('gananciaVivo').innerText = 'RD$ ' + ganancia.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        document.getElementById('margenVivo').innerText = margen.toFixed(1) + '%';
+    }
+
+    const inputs = ['clientes_dia', 'gasto_prom', 'dias_mes', 'costos_mensuales'];
+    inputs.forEach(id => {
+        document.getElementById(id).addEventListener('input', actualizarSimulador);
+    });
+
+    actualizarSimulador();
+</script>
+</body>
+</html>

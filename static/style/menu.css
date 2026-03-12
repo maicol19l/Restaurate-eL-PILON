@@ -1,0 +1,380 @@
+:root {
+    --main-color: #d31f1f;
+}
+
+*{
+box-sizing:border-box;
+font-family: 'Times New Roman', Times, serif;
+}
+
+body{
+margin:0;
+font-family:'Segoe UI',Arial,sans-serif;
+background:#f4f6f8;
+color:#333;
+}
+
+/* ================= HEADER ================= */
+
+.top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px;
+background-color: #fff;
+color:white;
+position:sticky;
+top:0;
+z-index:10;
+box-shadow: 0 0 10px 1px #0002;
+}
+
+.top h2{
+margin:0;
+font-size:28px;
+}
+
+.top h2 a {
+    text-decoration: none;
+    font-family: "Dancing Script", cursive;
+}
+
+.cart-btn{
+background: var(--main-color);
+border:none;
+padding:10px 18px;
+cursor:pointer;
+border-radius:8px;
+font-weight:bold;
+color:white;
+font-size:18px;
+display: flex;
+justify-content: center;
+align-items: center;
+gap: 10px;
+}
+
+/* ================= NAV ================= */
+
+.menu-nav{
+display:flex;
+justify-content:center;
+margin:20px 0;
+}
+
+.menu-nav ul{
+list-style:none;
+display:flex;
+gap:15px;
+padding:10px 10px;
+background:white;
+border-radius:40px;
+box-shadow:0 4px 12px rgba(0,0,0,0.1);
+}
+
+.nav-btn{
+padding: 10px;
+border-radius: 25px;
+cursor:pointer;
+font-weight:600;
+transition:.3s;
+display: flex;
+justify-content: center;
+align-items: center;
+gap: 10px;
+}
+
+.nav-btn:hover{
+background:#f2f2f2;
+}
+
+.nav-btn.active{
+background:#d31f1f;
+color:white;
+}
+
+/* ================= TITULOS ================= */
+
+.titulo{
+text-align:center;
+margin:30px 0 20px;
+font-size:28px;
+}
+
+/* ================= CATEGORIAS ================= */
+
+.categoria{
+display:none;
+}
+
+/* ================= MENU GRID ================= */
+
+.menu{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+gap:20px;
+padding:20px;
+max-width:1200px;
+margin:auto;
+}
+
+/* ================= CARD ================= */
+
+.card{
+background:white;
+border-radius:12px;
+padding:15px;
+text-align:center;
+box-shadow:0 4px 12px rgba(0,0,0,.08);
+transition:.25s;
+}
+
+.card:hover{
+transform:translateY(-5px);
+}
+
+.card h3{
+margin:10px 0;
+font-size:18px;
+}
+
+.food-img{
+width:100%;
+height:170px;
+background-size:cover;
+background-position:center;
+border-radius:8px;
+margin:10px 0;
+}
+
+.card p{
+font-weight:bold;
+margin:10px 0;
+}
+
+.card button{
+background:#2478af;
+border:none;
+padding:10px;
+width:100%;
+border-radius:6px;
+color:white;
+cursor:pointer;
+font-size:15px;
+transition:.2s;
+}
+
+.card button:hover{
+background:#1a5c85;
+}
+
+/* ================= CARRITO ================= */
+
+.cart{
+position:fixed;
+top:0;
+right:-360px;
+width:340px;
+height:100%;
+background:white;
+padding:15px;
+box-shadow:-4px 0 12px rgba(0,0,0,.25);
+transition:.3s;
+overflow-y:auto;
+z-index:20;
+}
+
+.cart.open{
+right:0;
+}
+
+.cart h3{
+text-align:center;
+}
+
+.cart-item{
+display:flex;
+gap:10px;
+margin-bottom:12px;
+border-bottom:1px solid #e0e0e0;
+padding-bottom:10px;
+align-items:center;
+}
+
+.cart-img{
+width:60px;
+height:60px;
+background-size:cover;
+background-position:center;
+border-radius:6px;
+}
+
+.cart-item button{
+padding:4px 8px;
+margin-right:4px;
+font-size:14px;
+border-radius:6px;
+border:none;
+cursor:pointer;
+}
+
+.cart-item button:nth-child(1){background:#ddd;}
+.cart-item button:nth-child(2){background:#c8e6c9;}
+.cart-item button:nth-child(3){background:#ffcdd2;}
+
+.cart input{
+width:100%;
+padding:9px;
+margin:6px 0;
+border-radius:6px;
+border:1px solid #ccc;
+}
+
+.cart button{
+width:100%;
+padding:10px;
+margin-top:6px;
+border:none;
+cursor:pointer;
+border-radius:6px;
+}
+
+.cart .pedir{
+background:#4caf50;
+color:white;
+font-weight:bold;
+}
+
+/* ================= MODAL ================= */
+
+.modal{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.55);
+display:none;
+justify-content:center;
+align-items:center;
+z-index:999;
+}
+
+.modal-box{
+background:white;
+padding:20px;
+border-radius:12px;
+text-align:center;
+width:300px;
+animation:pop .25s ease;
+}
+
+.modal-box img{
+width:80px;
+margin-bottom:10px;
+}
+
+.modal-box button{
+margin-top:15px;
+padding:10px 25px;
+border:none;
+background:#4caf50;
+color:white;
+border-radius:20px;
+cursor:pointer;
+font-weight:bold;
+}
+
+@keyframes pop{
+from{transform:scale(.8);opacity:0}
+to{transform:scale(1);opacity:1}
+}
+
+/* ================= RESPONSIVE CELULAR ================= */
+
+@media (max-width:700px){
+
+body{
+font-size:18px;
+}
+
+/* HEADER */
+.top{
+    display: flex;
+    flex-direction: column;
+    padding:10px;
+    gap: 10px;
+}
+
+.top h2{
+font-size:28px;
+text-align: right;
+display: none;
+}
+.top h2 a{
+text-decoration: none;
+color: #ffff;
+}
+
+.cart-btn{
+font-size:20px;
+padding:15px 20px;
+}
+
+/* NAV */
+
+.menu-nav_toggle {
+    
+}
+
+.menu-nav {
+    width: fit-content;
+    position: fixed;
+    top: 30%;
+}
+
+.menu-nav ul{
+flex-direction:column;
+gap:0;
+width:95%;
+}
+
+.menu-nav ul li p {
+    display: none;
+}
+
+.nav-btn{
+font-size:20px;
+padding:16px;
+}
+
+/* MENU */
+.menu{
+grid-template-columns:1fr;
+gap:30px;
+padding:25px;
+}
+
+/* CARDS */
+.card{
+padding:22px;
+}
+
+.card h3{
+font-size:22px;
+}
+
+.food-img{
+height:240px;
+}
+
+.card p{
+font-size:20px;
+}
+
+.card button{
+font-size:20px;
+padding:16px;
+}
+
+}

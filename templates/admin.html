@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Admin | El Pilón</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="../static/style/admin.css">
+</head>
+
+<body>
+
+    <h1>👨‍🍳 Control de Cocina STOCK</h1>
+
+<div class="stock-grid">
+
+{% for p in productos %}
+<div class="stock-card">
+
+<h3>{{ p.nombre }}</h3>
+
+<p>Stock: <b id="stock{{p.id}}">{{ p.stock }}</b></p>
+
+<div class="stock-btns">
+
+<button onclick="sumar({{p.id}},1)">+1</button>
+
+<button onclick="sumar({{p.id}},-1)">-1</button>
+
+<button onclick="agotado({{p.id}})">Agotado</button>
+
+</div>
+
+</div>
+{% endfor %}
+
+</div>
+
+<h1>📋 Pedidos Activos</h1>
+
+{% for p in pedidos %}
+<div class="pedido-card">
+    <h3>🪑 Mesa {{ p.info.mesa }} — {{ p.info.nombre }}</h3>
+
+    <small>
+        🕒 {{ p.info.fecha }}
+    </small>
+    <br>
+
+    <span class="estado {{ p.info.estado }}">
+        Estado: {{ p.info.estado }}
+    </span>
+
+    <ul>
+        {% for d in p.detalles %}
+        <li>
+            🍽 {{ d.nombre }} <strong>x {{ d.cantidad }}</strong>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <strong>Total: RD$ {{ p.info.total }}</strong>
+
+    <div class="acciones">
+        <button class="prep" onclick="cambiarEstado({{ p.info.id }}, 'preparacion')">
+            Preparación
+        </button>
+        <button class="serv" onclick="cambiarEstado({{ p.info.id }}, 'servido')">
+            Servido
+        </button>
+        <button class="fin" onclick="cambiarEstado({{ p.info.id }}, 'finalizado')">
+            Finalizar
+        </button>
+    </div>
+</div>
+{% else %}
+<p style="text-align:center;">No hay pedidos activos</p>
+{% endfor %}
+
+<script>
+function cambiarEstado(id, estado){
+    fetch("/cambiar_estado",{
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({ id:id, estado:estado })
+    }).then(()=>{
+        location.reload();
+    });
+}
+
+function sumar(id,cantidad){
+
+fetch("/stock_sumar",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+id:id,
+cantidad:cantidad
+})
+}).then(()=>{
+location.reload()
+})
+
+}
+
+function agotado(id){
+
+fetch("/stock_agotado",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+id:id
+})
+}).then(()=>{
+location.reload()
+})
+
+}
+
+
+// auto refresh cada 5 segundos (tiempo casi real)
+setInterval(()=>location.reload(), 5000);
+</script>
+
+</body>
+</html>
